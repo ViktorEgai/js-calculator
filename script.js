@@ -4,9 +4,8 @@ let isNumber = function(n) {
 }
 
 let money,
-    income = 'Пассивный доход',
-    addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую'),
-    deposit = confirm('Есть ли у вас депозит в банке?'),
+    income = 'Пассивный доход',    
+    
     mission = 1500000;
 
 let start = function() {
@@ -19,6 +18,9 @@ let start = function() {
 
 start();
 
+let addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую'),
+    deposit = confirm('Есть ли у вас депозит в банке?');
+    
 console.log('Тип данных переменной money: ', typeof money);
 console.log('Тип данных переменной income: ', typeof income);
 console.log('Тип данных переменной deposit: ', typeof deposit);
