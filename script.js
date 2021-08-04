@@ -1,5 +1,5 @@
 'use strict';
-let isNumber = function(n) {
+const isNumber = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
@@ -8,7 +8,7 @@ let money,
     
     mission = 1500000;
 
-let start = function() {
+const start = function() {
   do {
     money = prompt('Ваш месячный доход');
   } while (
@@ -20,7 +20,7 @@ start();
 
 let addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую'),
     deposit = confirm('Есть ли у вас депозит в банке?');
-    
+
 console.log('Тип данных переменной money: ', typeof money);
 console.log('Тип данных переменной income: ', typeof income);
 console.log('Тип данных переменной deposit: ', typeof deposit);
@@ -60,7 +60,7 @@ function getExpensesMonth() {
   return sum;  
 }
 
-let expensesAmount = getExpensesMonth();
+const expensesAmount = getExpensesMonth();
 
 function getAccumulateMonth() {
   return money - expensesAmount; 
