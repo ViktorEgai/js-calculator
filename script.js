@@ -35,12 +35,23 @@ let appData = {
       appData.addExpenses = addExpenses.toLowerCase().split(',');
       appData.deposit = confirm('Есть ли у вас депозит в банке?');
     }   
+    
+      for(let i =0; i < 2; i++) {          
+        expenses = prompt('Введите обязательную статью расходов?');   
 
-    for(let i =0; i < 2; i++) {          
-        expenses = prompt('Введите обязательную статью расходов?');      
-        amount = prompt('Во сколько это обойдется?');
-        appData.expenses['"'+ expenses +'"']= +amount;
+        function askAmount() { 
+          amount = prompt('Во сколько это обойдется?');
+          if (!isNumber(amount)) {
+            return askAmount();
+          } else {
+            return +amount;
+          }
+        }          
+        
+        appData.expenses['"'+ expenses +'"'] = askAmount();
       }
+    
+    
   },
   getStatusIncome: function () {
     if (appData.budgetDay >= 1200) {
@@ -85,7 +96,7 @@ if (targetMonth === 1) {
 } 
 
 console.log(appData.getStatusIncome());
-console.log('Наша программа включает в себя данные: ' );
+console.log('Наша программа включает в себя данные: ', );
 for (let key in appData) {
   console.log(key , appData[key] );
 }
