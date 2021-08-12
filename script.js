@@ -43,17 +43,9 @@ let appData = {
   budgetDay: 0,
   budgetMonth: 0,
   expensesMonth: 0,
-  checkSalaryVal: function(){
-    if (salaryAmount.value !== '') {   
-      start.disabled = false; 
-      return appData.budget = salaryAmount.value;        
-    } else {
-      start.disabled = true;
-      
-    }
-  },
+
   start: function() {
-    // appData.budget = salaryAmount.value;  
+    appData.budget = salaryAmount.value;  
     appData.getIncome();
     appData.getExpenses();
     appData.getAddExpenses();
@@ -64,6 +56,7 @@ let appData = {
   addIncomeBlock: function() {   
     let cloneIncomeItem = incomeItems[0].cloneNode(true);
     incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomeAddButton);
+    incomeItems.value = '';
     incomeItems = document.querySelectorAll('.income-items');    
     if (incomeItems.length === 3) incomeAddButton.style.display = 'none';
   },
@@ -147,7 +140,11 @@ let appData = {
   }
 };
 
-setInterval(appData.checkSalaryVal, 500);
+start.disabled = true;   
+salaryAmount.addEventListener('input', () => {
+  if (salaryAmount.value !== '') start.disabled = false;  
+});
+
 start.addEventListener('click', appData.start);
 incomeAddButton.addEventListener('click', appData.addIncomeBlock);
 expensesAddButton.addEventListener('click', appData.addExpensesBlock);
