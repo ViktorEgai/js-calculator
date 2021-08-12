@@ -148,7 +148,11 @@ let appData = {
 
 start.disabled = true;   
 salaryAmount.addEventListener('input', () => {
-  if (salaryAmount.value !== '') start.disabled = false;  
+  if (salaryAmount.value !== '') {
+    start.disabled = false;
+  } else {
+    start.disabled = true;
+  }
 });
 
 start.addEventListener('click', appData.start);
