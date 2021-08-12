@@ -23,8 +23,9 @@ const depositPercent = document.querySelector('.deposit-percent');
 const periodSelect = document.querySelector('.period-select');
 const targetAmount = document.querySelector('.target-amount');
 // console.log('targetAmount: ', targetAmount);
-let incomeItems = document.querySelectorAll('.income-items');
-let expensesItems = document.querySelectorAll('.expenses-items');
+const incomeItems = document.querySelectorAll('.income-items');
+const expensesItems = document.querySelectorAll('.expenses-items');
+const allInput = document.querySelectorAll('input');
 
 const isNumber = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -56,7 +57,9 @@ let appData = {
   addIncomeBlock: function() {   
     let cloneIncomeItem = incomeItems[0].cloneNode(true);
     incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomeAddButton);
-    incomeItems.value = '';
+    cloneIncomeItem.querySelectorAll('input').forEach((input)=> {
+      input.value = '';
+    })
     incomeItems = document.querySelectorAll('.income-items');    
     if (incomeItems.length === 3) incomeAddButton.style.display = 'none';
   },
@@ -79,6 +82,9 @@ let appData = {
   addExpensesBlock: function() {   
     let cloneExpensesItem = expensesItems[0].cloneNode(true);
     expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesAddButton);
+    cloneExpensesItem.querySelectorAll('input').forEach((input)=> {
+      input.value = '';
+    })
     expensesItems = document.querySelectorAll('.expenses-items');    
     if (expensesItems.length === 3) expensesAddButton.style.display = 'none';
 
@@ -152,3 +158,14 @@ const periodAmount = document.querySelector('.period-amount');
 periodSelect.addEventListener('input', ()=> {
   periodAmount.textContent = periodSelect.value;  
 })
+allInput.forEach((item)=>{
+  item.addEventListener('input', () => {
+    if (item.getAttribute('placeholder') === 'Наименование') {
+        item.value = item.value.replace(/[^а-я \s !?,. ]/,'');
+    }
+    if (item.getAttribute('placeholder') === 'Сумма') {
+        item.value = item.value.replace(/[^1-9]/,'');
+    }
+  })
+  
+});
