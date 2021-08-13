@@ -23,9 +23,8 @@ const depositPercent = document.querySelector('.deposit-percent');
 const periodSelect = document.querySelector('.period-select');
 const targetAmount = document.querySelector('.target-amount');
 // console.log('targetAmount: ', targetAmount);
-const incomeItems = document.querySelectorAll('.income-items');
-const expensesItems = document.querySelectorAll('.expenses-items');
-const allInput = document.querySelectorAll('input');
+let incomeItems = document.querySelectorAll('.income-items');
+let expensesItems = document.querySelectorAll('.expenses-items');
 
 const isNumber = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -43,25 +42,39 @@ let appData = {
   budget: 10000,
   budgetDay: 0,
   budgetMonth: 0,
-  expensesMonth: 0,
-
+  expensesMonth: 0,  
+  checkInput: function() {   
+    let allInput = document.querySelectorAll('input');
+    allInput.forEach((item)=>{
+      item.addEventListener('input', () => {
+        if (item.getAttribute('placeholder') === 'Наименование') {
+            item.value = item.value.replace(/[^а-я \s !?,. ]/,'');
+        }
+        if (item.getAttribute('placeholder') === 'Сумма') {
+            item.value = item.value.replace(/[^1-9]/,'');
+        }
+      })  
+    });
+  },
   start: function() {
     appData.budget = salaryAmount.value;  
     appData.getIncome();
     appData.getExpenses();
     appData.getAddExpenses();
     appData.getAddIncome();
-    appData.getBudget();    
+    appData.getBudget();  
     appData.showResult();
   }, 
   addIncomeBlock: function() {   
     let cloneIncomeItem = incomeItems[0].cloneNode(true);
     incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomeAddButton);
     cloneIncomeItem.querySelectorAll('input').forEach((input)=> {
-      input.value = '';
+      input.value = '';      
     })
+
     incomeItems = document.querySelectorAll('.income-items');    
     if (incomeItems.length === 3) incomeAddButton.style.display = 'none';
+    appData.checkInput();
   },
   getIncome: function() {
     incomeItems.forEach(function(item) {
@@ -87,7 +100,8 @@ let appData = {
     })
     expensesItems = document.querySelectorAll('.expenses-items');    
     if (expensesItems.length === 3) expensesAddButton.style.display = 'none';
-
+    appData.checkInput();
+    
   },
   getExpenses: function() {
     expensesItems.forEach(function(item) {
@@ -154,7 +168,7 @@ salaryAmount.addEventListener('input', () => {
     start.disabled = true;
   }
 });
-
+appData.checkInput();
 start.addEventListener('click', appData.start);
 incomeAddButton.addEventListener('click', appData.addIncomeBlock);
 expensesAddButton.addEventListener('click', appData.addExpensesBlock);
@@ -162,14 +176,5 @@ const periodAmount = document.querySelector('.period-amount');
 periodSelect.addEventListener('input', ()=> {
   periodAmount.textContent = periodSelect.value;  
 })
-allInput.forEach((item)=>{
-  item.addEventListener('input', () => {
-    if (item.getAttribute('placeholder') === 'Наименование') {
-        item.value = item.value.replace(/[^а-я \s !?,. ]/,'');
-    }
-    if (item.getAttribute('placeholder') === 'Сумма') {
-        item.value = item.value.replace(/[^1-9]/,'');
-    }
-  })
-  
-});
+
+
