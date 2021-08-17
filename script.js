@@ -158,19 +158,41 @@ class AppData {
     return this.budgetMonth * periodSelect.value;
   }
 
+ saveStorage() {
+    budgetMonthValue.value = localStorage.budgetMonth;  
+    budgetDayValue.value = localStorage.budgetDay;
+    expensesMonthValue.value = localStorage.expensesMonth;
+    additionalExpensesValue.value = localStorage.addExpenses;
+    additionalIncomeValue.value = localStorage.addIncome;
+    targetMonthValue.value = localStorage.targetMonth;
+    incomePeriodValue.value = localStorage.incomePeriod;
+ }
+ 
+
   showResult() {
-    budgetMonthValue.value = this.budgetMonth;
-    budgetDayValue.value = Math.floor(this.budgetDay);
-    expensesMonthValue.value = this.expensesMonth;
-    additionalExpensesValue.value = this.addExpenses.join(', ');
-    additionalIncomeValue.value = this.addIncome.join(', ');
-    targetMonthValue.value = Math.ceil(this.getTargetMonth());
-    incomePeriodValue.value = this.calcSavedMoney();
+    localStorage.budgetMonth = this.budgetMonth;
+    localStorage.budgetDay =  Math.floor(this.budgetDay);
+    localStorage.expensesMonth = this.expensesMonth;
+    localStorage.addExpenses = this.addExpenses.join(', ');
+    localStorage.addIncome = this.addIncome.join(', ');
+    localStorage.targetMonth = Math.ceil(this.getTargetMonth());
+    localStorage.incomePeriod = this.calcSavedMoney();
+    document.cookie = 'budgetMonth=' + this.budgetMonth;
+    document.cookie = 'budgetDay=' +  Math.floor(this.budgetDay);
+    document.cookie = 'expensesMonth=' + this.expensesMonth;
+    document.cookie = 'addExpenses=' + this.addExpenses.join(', ');
+    document.cookie = 'addIncome=' + this.addIncome.join(', ');
+    document.cookie = 'targetMonth=' + Math.ceil(this.getTargetMonth());
+    document.cookie = 'incomePeriod=' + this.calcSavedMoney();
+    document.cookie = 'isLoad=true';
+    this.saveStorage();
+   
     periodSelect.addEventListener('input', ()=> {      
-      incomePeriodValue.value = this.calcSavedMoney();
+      localStorage.incomePeriod = this.calcSavedMoney();
+      incomePeriodValue.value = localStorage.incomePeriod;
     })    
   }
-
+   
   reset() {
     this.income = {};
     this.addIncome = [];
@@ -207,6 +229,7 @@ class AppData {
     depositBank.style.display = 'none';
     depositAmount.style.display = 'none';
     depositPercent.style.display = 'none';
+    localStorage.clear();     
   }
 
   getInfoDeposit() {
@@ -277,13 +300,29 @@ class AppData {
     periodSelect.addEventListener('input', ()=> {
       periodAmount.textContent = periodSelect.value;  
     });
-    depositCheck.addEventListener('change', appData.depositHandler.bind(this))
+    depositCheck.addEventListener('change', appData.depositHandler.bind(this));
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.length !== 0){ 
+        this.saveStorage();
+        allInput.forEach((input) => {
+          input.disabled = true;
+          if (input === periodSelect) input.disabled = false;
+        })
+        start.style.display = 'none';
+        cancel.style.display = 'block';  
+      } else {
+        allInput.forEach((item)=> {
+          item.value = '';
+          periodSelect.value = '1';
+          periodAmount.textContent = '1';
+        })
+      }  
+    });
   }
 };
-
-
-
 const appData = new AppData();
 appData.eventListeners();
+
+
 
 
