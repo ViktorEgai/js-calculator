@@ -68,8 +68,8 @@ class AppData {
   start() {
     this.budget = salaryAmount.value;  
     this.getExpInc();
-    this.getAddExpenses();
-    this.getAddIncome();
+    this.getAddExpInc(additionalExpensesItem, true);
+    this.getAddExpInc(additionIncomeInput, false);
     this.getInfoDeposit();
     this.getBudget();  
     this.showResult();
@@ -122,22 +122,25 @@ class AppData {
     return this.expensesMonth;
   }
 
-  getAddExpenses() {
-    let addExpenses =  additionalExpensesItem.value.split(',');
-    addExpenses.forEach((item) => {      
-      item = item.trim();
-      if (item != '') {
-        this.addExpenses.push(item);        
+  getAddExpInc(addPlace, bool) {
+    let addPlaceItem;
+    if (bool) {
+      addPlaceItem = additionalExpensesItem.value.split(',');    
+    } else {      
+      addPlaceItem = additionIncomeInput;    
+    }
+    addPlaceItem.forEach((item) => {
+      let itemValue;
+      if (bool) {
+        itemValue = item.trim();
+        addPlace = this.addExpenses;
+      } else {
+        itemValue = item.value.trim();
+        addPlace = this.addIncome;
       }
-    });    
-  }
-
-  getAddIncome() {    
-    additionIncomeInput.forEach((item) => {      
-      let itemValue = item.value.trim();
-        if (itemValue != '') {
-          this.addIncome.push(itemValue);         
-        }
+      if (itemValue !== '') {
+        addPlace.push(itemValue);
+      }
     });
   }
 
