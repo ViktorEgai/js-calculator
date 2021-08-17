@@ -64,40 +64,43 @@ class AppData {
   
   start() {
     this.budget = salaryAmount.value;  
-    this.getIncome();
-    this.getExpenses();
+    this.getExpInc();
     this.getAddExpenses();
     this.getAddIncome();
     this.getBudget();  
     this.showResult();
     allInput.forEach((input) => {
-      input.setAttribute('disabled','');
-      if (input === periodSelect) input.removeAttribute('disabled');
+      input.disabled = true;
+      if (input === periodSelect) input.disabled = false;
     })
     start.style.display = 'none';
     cancel.style.display = 'block';    
   }
 
-  addIncomeBlock() {   
-    let cloneIncomeItem = incomeItems[0].cloneNode(true);
-    incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomeAddButton);
-    cloneIncomeItem.querySelectorAll('input').forEach((input)=> {
+  addExpIncBlock(items, button) {    
+    let cloneItem = items[0].cloneNode(true);
+    items[0].parentNode.insertBefore(cloneItem, button);
+    cloneItem.querySelectorAll('input').forEach((input)=> {
       input.value = '';      
-    })
-
-    incomeItems = document.querySelectorAll('.income-items');    
+    })     
+    incomeItems = document.querySelectorAll('.income-items');
+    expensesItems = document.querySelectorAll('.expenses-items');
     if (incomeItems.length === 3) incomeAddButton.style.display = 'none';
-    this.checkInput();    
+    if (expensesItems.length === 3) expensesAddButton.style.display = 'none';
+    this.checkInput();
   }
 
-  getIncome () {
-    incomeItems.forEach((item) => { 
-      let itemIncome = item.querySelector('.income-title').value;
-      let cashIncome = item.querySelector('.income-amount').value;           
-      if (itemIncome !== '' && cashIncome !=='') {
-        this.income[itemIncome] = cashIncome;
+  getExpInc() {
+    const count = item => {
+      const startStr = item.className.split('-')[0];
+      const itemTitle = item.querySelector(`.${startStr}-title`).value;
+      const itemAmount = item.querySelector(`.${startStr}-amount`).value;
+      if (itemTitle !== '' && itemAmount !=='') {
+        this[startStr][itemTitle] = itemAmount;
       };
-    });
+    } 
+    incomeItems.forEach(count);
+    expensesItems.forEach(count);
   }
 
   getIncomeMonth() {
@@ -106,28 +109,6 @@ class AppData {
     sum += +this.income[key];    
     }     
     return sum;
-  }
-
-  addExpensesBlock() {   
-    let cloneExpensesItem = expensesItems[0].cloneNode(true);
-    expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesAddButton);
-    cloneExpensesItem.querySelectorAll('input').forEach((input)=> {
-      input.value = '';
-    })
-    expensesItems = document.querySelectorAll('.expenses-items');    
-    if (expensesItems.length === 3) expensesAddButton.style.display = 'none';
-    this.checkInput();
-    
-  }
-
-  getExpenses() {
-    expensesItems.forEach((item)=> {
-      let itemExpenses = item.querySelector('.expenses-title').value;
-      let cashExpenses = item.querySelector('.expenses-amount').value;
-      if (itemExpenses !== '' && cashExpenses !=='') {
-        this.expenses[itemExpenses] = cashExpenses;
-      };
-    });
   }
 
   getExpensesMonth() {    
@@ -144,8 +125,7 @@ class AppData {
       if (item != '') {
         this.addExpenses.push(item);        
       }
-    });
-    
+    });    
   }
 
   getAddIncome() {    
@@ -225,11 +205,17 @@ class AppData {
         start.disabled = true;
       }
     });  
-    appData.checkInput();
+    
+    this.checkInput();
     start.addEventListener('click',  appData.start.bind(appData));
     cancel.addEventListener('click', appData.reset.bind(appData));
-    incomeAddButton.addEventListener('click', appData.addIncomeBlock.bind(appData));
-    expensesAddButton.addEventListener('click', appData.addExpensesBlock.bind(appData));
+
+    incomeAddButton.addEventListener('click', function() {
+      appData.addExpIncBlock(incomeItems, incomeAddButton);
+    });
+    expensesAddButton.addEventListener('click', function() {
+      appData.addExpIncBlock(expensesItems, expensesAddButton);
+    });
     periodSelect.addEventListener('input', ()=> {
       periodAmount.textContent = periodSelect.value;  
     })
