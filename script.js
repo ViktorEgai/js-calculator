@@ -63,8 +63,8 @@ class AppData {
         }
       })  
     });
-  }
-  
+} 
+
   start() {
     this.budget = salaryAmount.value;  
     this.getExpInc();
